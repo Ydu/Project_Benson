@@ -11,7 +11,7 @@ import calendar
 import matplotlib.pyplot as plt
 import matplotlib
 %matplotlib inline
-matplotlib.style.use('ggplot')
+matplotlib.style.use("ggplot")
 
 ### 2018 DATASETS FROM BEGINNING OF MONTH
 new_cols = ["C/A", "UNIT", "SCP", "STATION", "LINENAME", "DIVISION", "DATE", "TIME", "DESC", "ENTRIES", "EXITS"]
@@ -62,23 +62,6 @@ path = "http://web.mta.info/developers/data/nyct/turnstile/turnstile_190629.txt"
 new_cols = ["C/A", "UNIT", "SCP", "STATION", "LINENAME", "DIVISION", "DATE", "TIME", "DESC", "ENTRIES", "EXITS"]
 MTA_data = pd.read_csv(path, sep=",", header=0, names=new_cols)
 
-### sort and group by date
-MTA_data["DATE"] = MTA_data["DATE"]
-date_grouped_MTA_data = MTA_data.groupby("DATE").count()
-date_sorted_MTA_data = MTA_data.sort_values("DATE")
-# rearrange columns
-cols = MTA_data.columns.tolist()
-cols
-cols = cols[:7] + cols[-1:]
-cols
-### sort and group by day of the week
-MTA_data.info()
-
-
-### 378 different subway stations
-unique_station_names = MTA_data.STATION.unique()
-len(unique_station_names)
-
 ### add turnstile passes column
 MTA_data['TURNSTILE_PASSES'] = MTA_data['ENTRIES'] + MTA_data['EXITS']
 MTA_data.sample(10)
@@ -88,6 +71,28 @@ MTA_data["DATE"] = pd.to_datetime(MTA_data["DATE"])
 days = [calendar.day_name[date.weekday()] for date in MTA_data["DATE"]]
 MTA_data["DAY_OF_WEEK"] = days
 
-### sort by station name
-grouped_by_station = df.groupby('STATION').mean()
+### sort and group by date
+MTA_data["DATE"] = MTA_data["DATE"]
+date_grouped_MTA_data = MTA_data.groupby("DATE").count()
+date_sorted_MTA_data = MTA_data.sort_values("DATE")
+# rearrange columns
+cols = MTA_data.columns.tolist()
+len(cols)
+c1, c2, c3 = list(cols[:7]), cols[-1:], list(cols[7:-1])
+cols = c1 + c2 + c3
+cols
+MTA_data = MTA_data[cols]
+
+# new DataFrame with relevant data
+condensed_cols = [cols[3], cols[6], cols[7], cols[8], cols[10], cols[11], cols[-1]]
+condensed_MTA_data = MTA_data[condensed_cols]
+condensed_MTA_data
+
+### 378 different subway stations
+len(MTA_data.STATION.unique())
+
+### group by columns and sort by highest activity
+grouped_by_station = condensed_MTA_data.groupby('STATION').count().sort_values("DATE", ascending=False)
 grouped_by_station
+grouped_by_time = condensed_MTA_data.groupby('TIME').count()
+grouped_by_time.sample(10)
