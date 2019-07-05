@@ -1,4 +1,6 @@
-# common modules
+ADD TITLE # common modules
+
+
 import os
 import re
 import pandas as pd
@@ -86,7 +88,7 @@ MTA_data = MTA_data[cols]
 # new DataFrame with relevant data
 condensed_cols = [cols[3], cols[6], cols[7], cols[8], cols[10], cols[11], cols[-1]]
 condensed_MTA_data = MTA_data[condensed_cols]
-condensed_MTA_data
+condensed_MTA_datas
 
 ### 378 different subway stations
 len(MTA_data.STATION.unique())
